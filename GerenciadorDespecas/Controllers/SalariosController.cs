@@ -19,11 +19,22 @@ namespace GerenciadorDespecas.Controllers
             
         }
 
-        // GET: Salarios
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var contexto = _context.salarios.Include(s => s.Meses);
             return View(await contexto.ToListAsync());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Index(string txtProcurar)
+        {
+            if (!String.IsNullOrEmpty(txtProcurar))
+            {
+                return View(await _context.salarios.Include(x => x.Meses).Where(m => m.Meses.Nome.ToUpper().Contains(txtProcurar.ToUpper())).ToListAsync());
+            }
+            return View(_context.salarios.Include(s => s.Meses).ToListAsync());
         }
 
         // GET: Salarios/Create
@@ -42,6 +53,7 @@ namespace GerenciadorDespecas.Controllers
         {
             if (ModelState.IsValid)
             {
+                TempData["Confimarcao"] = "Salario cadastrado com sucesso!!!";
                 _context.Add(salario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,6 +94,7 @@ namespace GerenciadorDespecas.Controllers
 
             if (ModelState.IsValid)
             {
+                TempData["Confirmacao"] = "Salario Editado com sucesso!!!";
                 try
                 {
                     _context.Update(salario);
@@ -100,38 +113,22 @@ namespace GerenciadorDespecas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MesId"] = new SelectList(_context.meses, "MesId", "Nome", salario.MesId);
+            ViewData["MesId"] = new SelectList(_context.meses.Where(x=>x.MesId == salario.MesId), "MesId", "Nome", salario.MesId);
             return View(salario);
         }
 
-        // GET: Salarios/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var salario = await _context.salarios
-                .Include(s => s.Meses)
-                .FirstOrDefaultAsync(m => m.SalarioId == id);
-            if (salario == null)
-            {
-                return NotFound();
-            }
-
-            return View(salario);
-        }
 
         // POST: Salarios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        
+        public async Task<IActionResult> Delete(int id)
         {
+            TempData["Confirmacao"] = "Salario Excluido com sucesso!!";
             var salario = await _context.salarios.FindAsync(id);
             _context.salarios.Remove(salario);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool SalarioExists(int id)

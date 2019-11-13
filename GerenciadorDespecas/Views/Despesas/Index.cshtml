@@ -1,0 +1,99 @@
+﻿@model X.PagedList.IPagedList<GerenciadorDespecas.Models.Despesas>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@{
+    ViewData["Title"] = "Cadastro de despesas";
+}
+
+<div class="tabela">
+    <div class="container">
+        <p class="btnNovo">
+            <a asp-action="Create" class="btn btn-outline-primary btn-sm">Cadastro de despesas</a>
+        </p>
+        <div class="tabelaPrincipal">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            Meses
+                        </th>
+                        <th>
+                            Tipo da Despesa
+                        </th>
+                        <th>
+                            Valor
+                        </th>
+                        <th>
+                            Ação
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Meses.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Valor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TipoDespesas.Nome)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.DespesaId">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@item.DespesaId">Excluir</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@Html.PagedListPager(Model, pagina => Url.Action("Indez", "Despesas", new { pagina}), new PagedListRenderOptionsBase
+{
+    LiElementClasses = new string[] {"page-item"},
+    PageClasses = new string[] { "page-link"}
+})
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja realmente excluir essa despesas ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnExcluir">Sim</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function ExibirModal(id, nome) {
+            $(".nome")[0].innerHTML = nome;
+            $(".modal").modal();
+            $(".btnExcluir").on('click', function () {
+                $.ajax({
+                    url: "Despesas/Delete",
+                    method: "POST",
+                    data: { id: id },
+                    success: function (data) {
+                        $(".modal").modal('hide');
+                        location.reload(true);
+                    }
+                });
+            });
+        }
+    </script>
