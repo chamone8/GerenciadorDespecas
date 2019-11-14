@@ -23,7 +23,7 @@ namespace GerenciadorDespecas.Controllers
         {
             const int itensPgina = 10;
             int numeroPagina = (pagina ?? 1);
-
+            ViewData["Meses"] = new SelectList(_context.meses.Where(x => x.MesId == x.salario.MesId),"MesId","Nome");
             var contexto = _context.despesas.Include(d => d.Meses).Include(d => d.TipoDespesas).OrderBy(d => d.MesId);
             return View(await contexto.ToPagedListAsync(numeroPagina, itensPgina));
         }
@@ -32,6 +32,7 @@ namespace GerenciadorDespecas.Controllers
         // GET: Despesas/Create
         public IActionResult Create()
         {
+            TempData["Confirmacao"] = "Despesa Cadastrada com sucesso!";
             ViewData["MesId"] = new SelectList(_context.meses, "MesId", "Nome");
             ViewData["TipoDespesaId"] = new SelectList(_context.tipoDespesas, "TipoDespesaId", "Nome");
             return View();
@@ -46,6 +47,8 @@ namespace GerenciadorDespecas.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                TempData["Confirmacao"] = "Despesa Cadastrada com sucesso";
                 _context.Add(despesas);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -62,6 +65,7 @@ namespace GerenciadorDespecas.Controllers
             {
                 return NotFound();
             }
+
 
             var despesas = await _context.despesas.FindAsync(id);
             if (despesas == null)
@@ -87,6 +91,7 @@ namespace GerenciadorDespecas.Controllers
 
             if (ModelState.IsValid)
             {
+                TempData["Confirmacao"] = "Despesa Editada com Sucesso";
                 try
                 {
                     _context.Update(despesas);
@@ -115,6 +120,7 @@ namespace GerenciadorDespecas.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            TempData["Confirmacao"] = "Deletado com sucesso!!";
             var despesas = await _context.despesas.FindAsync(id);
             _context.despesas.Remove(despesas);
             await _context.SaveChangesAsync();

@@ -1,41 +1,104 @@
 ﻿@model GerenciadorDespecas.Models.Despesas
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nova Despesas";
 }
 
-<h2>Create</h2>
 
-<h4>Despesas</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MesId" class="control-label"></label>
-                <select asp-for="MesId" class ="form-control" asp-items="ViewBag.MesId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipoDespesaId" class="control-label"></label>
-                <select asp-for="TipoDespesaId" class ="form-control" asp-items="ViewBag.TipoDespesaId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" />
-                <span asp-validation-for="Valor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+<div class="formulario">
+    <h6>Despesas</h6>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" class="form rounded border">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="MesId" class="control-label">Mês</label>
+                    <select asp-for="MesId" class="form-control" asp-items="ViewBag.MesId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TipoDespesaId" class="control-label">Tipo de Despesa</label>
+                    <div class="input-group">
+                        <select asp-for="TipoDespesaId" class="form-control" asp-items="ViewBag.TipoDespesaId"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn  btn-outline-info" data-toggle="tooltip" data-placement="right" title="Adicionar novo tipo de despesas " onclick="MostrarModal()">
+                                <i class="far fa-plus-square"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Valor" class="control-label"></label>
+                    <input asp-for="Valor" class="form-control" />
+                    <span asp-validation-for="Valor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-outline-primary btn-sm" />&nbsp;
+                    <a asp-action="Index" class="btn btn-outline-dark btn-sm">Voltar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+
+<!--Modal despesas-->
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar nova despesa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control txtDespesa"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnAdicionar">Adicionar</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function MostrarModal() {
+            $(".modal").modal();
+
+
+            $(".btnAdicionar").on('click', function () {
+                var txtDespesa = $(".txtDespesa").val();
+
+
+                $.ajax({
+                    url: "/TipoDespesas/AdicionarTipoDespesa",
+                    method: "POST",
+                    data: { txtDespesa: txtDespesa },
+                    success: function (data) {
+                        if (!data) {
+                            $(".modal").modal('hide');
+                            $(".modal").modal('dispose');
+                            $('.btnAdicionar').unbind('click');
+                            $('.txtDespesa').val('');
+                            alert("Tipo de despesa ja cadastrado");
+                        }
+                        else location.reload(true);
+                    }
+                })
+            });
+        }
+    </script>
+
+
 }

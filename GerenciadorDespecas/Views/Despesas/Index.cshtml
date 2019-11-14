@@ -10,6 +10,29 @@
         <p class="btnNovo">
             <a asp-action="Create" class="btn btn-outline-primary btn-sm">Cadastro de despesas</a>
         </p>
+
+        @if (TempData["Confirmacao"] != null)
+        {
+        <h6 class="alert alert-success">@TempData["Confirmacao"]</h6>
+        }
+
+        <div class="row justify-content-md-center">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label"><strong>Mês</strong></label>
+                <div class="col-sm-9">
+                    <select class="form-control escolhaMes" asp-items="ViewBag.Meses"></select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                 <partial name="_GastoTotalMes"/>
+            </div>
+       </div>
+
+
         <div class="tabelaPrincipal">
             <table class="table table-hover">
                 <thead>
@@ -42,8 +65,8 @@
                                 @Html.DisplayFor(modelItem => item.TipoDespesas.Nome)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.DespesaId">Editar</a>
-                                <a asp-action="Delete" asp-route-id="@item.DespesaId">Excluir</a>
+                                <a class="btn btn-outline-primary btn-sm" asp-action="Edit" asp-route-id="@item.DespesaId">Editar</a>
+                                <a class="btn btn-outline-danger btn-sm" onclick="ExibirModal(@item.DespesaId)">Excluir</a>
                             </td>
                         </tr>
                     }
@@ -53,7 +76,7 @@
     </div>
 </div>
 
-@Html.PagedListPager(Model, pagina => Url.Action("Indez", "Despesas", new { pagina}), new PagedListRenderOptionsBase
+@Html.PagedListPager(Model, pagina => Url.Action("Index", "Despesas", new { pagina}), new PagedListRenderOptionsBase
 {
     LiElementClasses = new string[] {"page-item"},
     PageClasses = new string[] { "page-link"}
@@ -81,8 +104,8 @@
 
 @section Scripts{
     <script>
-        function ExibirModal(id, nome) {
-            $(".nome")[0].innerHTML = nome;
+        function ExibirModal(id) {
+           // $(".nome")[0].innerHTML = nome;
             $(".modal").modal();
             $(".btnExcluir").on('click', function () {
                 $.ajax({
@@ -97,3 +120,4 @@
             });
         }
     </script>
+    }
