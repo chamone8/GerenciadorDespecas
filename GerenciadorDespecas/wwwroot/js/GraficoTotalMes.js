@@ -15,14 +15,27 @@
                 data:
                 {
                     labels: ['Restante', 'Total gasto'],
-                    datasets
+                    datasets: [{
+
+                        label: "Total Gasto",
+                        backgroundColor: ["#27ae60", "#c0392b"],
+                        data: [(dados.salario - dados.valorTotalGato), dados.valorTotalGato]
+
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    title: {
+                        display: true,
+                        text: "Total Gasto no Mes"
+                    }
                 }
 
 
             })
         }
 
-    })
+    });
 
 
 });
