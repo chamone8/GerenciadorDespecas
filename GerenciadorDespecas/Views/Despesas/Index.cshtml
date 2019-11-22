@@ -13,7 +13,7 @@
 
         @if (TempData["Confirmacao"] != null)
         {
-        <h6 class="alert alert-success">@TempData["Confirmacao"]</h6>
+            <h6 class="alert alert-success">@TempData["Confirmacao"]</h6>
         }
 
         <div class="row justify-content-md-center">
@@ -28,10 +28,27 @@
 
         <div class="row">
             <div class="col">
-                 <partial name="_GastoTotalMes"/>
+                <partial name="_GastoTotalMes" />
             </div>
-       </div>
+            <div class="col">
+                <partial name="_GastoMes" />
+            </div>
+        </div>
 
+
+
+        <div class="row">
+            <div class="col">
+                <partial name="_GastosTotais" />
+            </div>
+        </div>
+
+
+        <div class="estatisticas">
+            <div class="alert alert-primary">
+                @await Component.InvokeAsync("Estatistica")
+            </div>
+        </div>
 
         <div class="tabelaPrincipal">
             <table class="table table-hover">
@@ -103,9 +120,16 @@
 </div>
 
 @section Scripts{
+
+<script src="~/bundle.js"></script>
     <script>
+
+        CarregarDadosGastoMes();
+        CarregarDadosGastosTotaisMes();
+        CarregarDadosGastoTotais();
+
         function ExibirModal(id) {
-           // $(".nome")[0].innerHTML = nome;
+            // $(".nome")[0].innerHTML = nome;
             $(".modal").modal();
             $(".btnExcluir").on('click', function () {
                 $.ajax({
@@ -120,4 +144,4 @@
             });
         }
     </script>
-    }
+}

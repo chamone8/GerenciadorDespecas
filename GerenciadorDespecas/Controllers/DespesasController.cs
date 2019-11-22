@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GerenciadorDespecas.Models;
 using X.PagedList;
+using GerenciadorDespecas.ViewModels;
+
 namespace GerenciadorDespecas.Controllers
 {
     public class DespesasController : Controller
@@ -130,6 +132,41 @@ namespace GerenciadorDespecas.Controllers
         private bool DespesasExists(int id)
         {
             return _context.despesas.Any(e => e.DespesaId == id);
+        }
+
+        public JsonResult GastosTotaisMes(int mesId)
+        {
+            GastosTotaisViewModel gasto = new GastosTotaisViewModel();
+            gasto.ValorTotalGasto = _context.despesas.Where(d => d.Meses.MesId == mesId).Sum(s => s.Valor);
+            gasto.Salario = _context.salarios.Where(d => d.Meses.MesId == mesId).Select(s => s.Valor).FirstOrDefault();
+
+            return Json(gasto);
+
+        }
+
+        public JsonResult GastosMes(int mesId)
+        {
+            var query = from despesas in _context.despesas
+                        where despesas.Meses.MesId == mesId
+                        group despesas by despesas.TipoDespesas.Nome into g
+                        select new
+                        {
+                            TipoDespesas = g.Key,
+                            valores = g.Sum(d => d.Valor)
+                        };
+
+
+            return Json(query);
+        }
+
+        public JsonResult GastosTotais()
+        {
+            var query = _context.despesas.
+                OrderBy(m => m.Meses.MesId).
+                GroupBy(m => m.Meses.MesId).
+                Select(d => new { NomeMeses = d.Select(x => x.Meses.Nome).
+                Distinct(), Valores = d.Sum(x => x.Valor) });
+            return Json(query);
         }
     }
 }

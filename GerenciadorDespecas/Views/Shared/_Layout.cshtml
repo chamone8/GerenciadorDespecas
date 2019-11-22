@@ -7,8 +7,7 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link href="~/css/css.css" rel="stylesheet" />
+        <link href="~/bundle.css" rel="stylesheet" />
         <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet" />
     </environment>
     <environment exclude="Development">
@@ -24,7 +23,7 @@
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Gerenciador de Despesas</a>
+        <a class="navbar-brand" asp-action="Index" asp-controller="Despesas">Gerenciador de Despesas</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,7 +56,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <script src="~/bundle.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"

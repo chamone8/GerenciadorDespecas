@@ -4,5 +4,22 @@
     "inputFiles": [
       "wwwroot/css/css.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/bundle.js",
+    "inputFiles": [
+      "wwwroot/js/GraficoGastoMes.js",
+      "wwwroot/js/GraficoGastosTotais.js",
+      "wwwroot/js/GraficoTotalMes.js",
+      "wwwroot/js/MetodoGerais.js",
+      "wwwroot/js/site.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/bundle.css",
+    "inputFiles": [
+      "wwwroot/css/css.css",
+      "wwwroot/css/site.css"
+    ]
   }
 ]
